@@ -48,11 +48,13 @@ def dmbeat(fstart, fstop, df, dt, tobs,
     print(f'Total bandwidth is {BW} MHz.')
     nf = int(BW//df_hr) # number of frequency channels
     print(f'There will be {nf} frequency channels.')
+    rBW = nf*df_hr
+    print(f'Rounded bandwidth is {rBW} MHz.')
 
     print(f'Sample rate is {1e-6/dt_hr} MHz.')
 
     # Use PsrSigSim for generating a signal in a high-res dynamic spectrum
-    signal_1 = pss.signal.FilterBankSignal(fcent = cf, bandwidth = BW, Nsubband=nf, sample_rate=1e-6/dt_hr, fold = False)
+    signal_1 = pss.signal.FilterBankSignal(fcent = cf, bandwidth = rBW, Nsubband=nf, sample_rate=1e-6/dt_hr, fold = False)
     # Currently Gaussian profile
     # Note that 'width' of GaussProfile is in units of pulse phase, not seconds
     gauss_prof = pss.pulsar.GaussProfile(peak = 0.5, width = D, amp = 1.0)
