@@ -2,7 +2,10 @@ import numpy as np
 import matplotlib.pyplot as plt 
 import os 
 import glob 
-import psrsigsim as pss
+from .psrsigsim.signal.fb_signal import FilterBankSignal
+from .psrsigsim.pulsar.profiles import GaussProfile
+from .psrsigsim.pulsar.pulsar import Pulsar
+from .psrsigsim.ism.ism import ISM
 
 plt.rcParams['font.family'] = 'serif'
 plt.rcParams['mathtext.fontset'] = 'dejavuserif'
@@ -50,21 +53,27 @@ def dmbeat(fstart, fstop, df, dt, tobs,
     print(f'There will be {nf} frequency channels.')
     rBW = nf*df_hr
     print(f'Rounded bandwidth is {rBW} MHz.')
+    nt = int(tobs//dt_hr)
+    rTobs = nt*dt_hr
+    print(f'Total observing time is {rTobs} sec.')
 
     print(f'Sample rate is {1e-6/dt_hr} MHz.')
 
     # Use PsrSigSim for generating a signal in a high-res dynamic spectrum
-    signal_1 = pss.signal.FilterBankSignal(fcent = cf, bandwidth = rBW, Nsubband=nf, sample_rate=1e-6/dt_hr, fold = False)
+    signal_1 = FilterBankSignal(fcent = cf, bandwidth = rBW, Nsubband=nf, sample_rate=1e-6/dt_hr, fold = False)
     # Currently Gaussian profile
     # Note that 'width' of GaussProfile is in units of pulse phase, not seconds
-    gauss_prof = pss.pulsar.GaussProfile(peak = 0.5, width = D, amp = 1.0)
+    gauss_prof = GaussProfile(peak = 0.5, width = D, amp = 1.0)
     gauss_prof.init_profiles(2048, Nchan = 1)
     Smean = 10.0 # mean flux of pulsar in Jy; not currently used since we do not pass the Pulsar object through a telescope
-    pulsar_1 = pss.pulsar.Pulsar(P, Smean, profiles = gauss_prof, name = psr)
+    pulsar_1 = Pulsar(P, Smean, profiles = gauss_prof, name = psr)
+
+    print(len(signal_1.dat_freq))
+    print(signal_1.Nchan)
 
     # Disperse
-    ism_1 = pss.ism.ISM()
-    pulsar_1.make_pulses(signal_1, tobs = tobs)
+    ism_1 = ISM()
+    pulsar_1.make_pulses(signal_1, tobs = rTobs)
     ism_1.disperse(signal_1, DM)
 
     phases = np.linspace(0, tobs/P, len(signal_1.data[0,:]))
