@@ -1,4 +1,4 @@
-The functions in this directory are due to Jeffrey S. Hazboun, Brent Shapiro-Albert, Paul T. Baker, and the NANOGrav PsrSigSim team. This directory is a significantly pared-down version of the original PsrSigSim code.
+The functions in this directory are due to Jeffrey S. Hazboun, Brent Shapiro-Albert, Paul T. Baker, and the NANOGrav PsrSigSim team. This directory is a significantly pared-down version of the original PsrSigSim code (available here: https://github.com/PsrSigSim/PsrSigSim).
 
 These functions are reproduced here to facilitate use of PsrSigSim for our pulsar simulations; the package has not been regularly updated in recent years and dependency conflicts have arisen in parts of the PsrSigSim code that are not relevant for our purposes. Those conflicts are avoided in the pared-down version of PsrSigSim in this directory.
 
