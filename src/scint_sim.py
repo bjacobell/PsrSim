@@ -60,7 +60,8 @@ def scint_sim(mb2, rfresnel_m, screendist_m, veff=77.3, f_start=140, f_stop=160,
 
     dlam = frac_bw  # fractional bandwidth
     freq = cf # center frequency
-    ns = round(5*(1/ds))  # The size of the simulation in spatial steps. Total length in refractive scales is ns * ds
+    ns = 4*round(1/ds)  # The size of the simulation in spatial steps. Total length in refractive scales is ns * ds
+    print('ns', ns)
     # it seems like I can make the scintillation time smaller by tuning down ns
     # this is because total length in refractive scales is ns * ds
     nf = int(bw/(0.122))  # The number of frequency channels across the dlam fractional bandwidth
