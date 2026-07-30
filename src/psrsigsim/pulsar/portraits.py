@@ -137,6 +137,8 @@ class GaussPortrait(PulsePortrait):
         """
         ph = np.arange(Nphase)/Nphase
         self._profiles = self.calc_profiles(ph, Nchan=Nchan)
+        #print(f'Overall profile max is {np.max(self._profiles)}')
+        self._profiles = self._profiles / np.max(self._profiles)
         self._max_profile = [pr for pr in self._profiles if pr.max()==1.0][0]
 
 

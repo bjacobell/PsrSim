@@ -54,6 +54,13 @@ def shift_t(y, shift, dt=1):
         phase = -1j*2*np.pi*fs*shift
         yfft_sh = yfft * np.exp(phase)
         out = np.fft.irfft(yfft_sh)
+        # sometimes out size does not match in size (by a pixel)
+        # in this case, modify out to match in
+        while len(out) != len(y):
+            if len(out) - 1 == len(y):
+                out = out[:-1]
+            elif len(out) + 1 == len(y):
+                out = np.concatenate((out, [np.mean([out[0], out[-1]])]))
 
     return out
 

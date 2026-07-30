@@ -83,26 +83,26 @@ class Pulsar(object):
     def ref_freq(self):
         return self._ref_freq
     
-    def _add_spec_idx(self, signal):
-        """
-        Applies spectral index to input profiles.
+    # def _add_spec_idx(self, signal):
+    #     """
+    #     Applies spectral index to input profiles.
         
-        signal [object] : signal class object which has been previously defined
-        """
-        # Calculate scaling factor
-        C = (signal.dat_freq / self.ref_freq)**self.specidx
-        C = np.reshape(C.value, (signal.Nchan,1))
-        # Now scale the profiles with these corrections
-        Nph = int((signal.samprate * self.period).decompose())
-        self.Profiles.init_profiles(Nph, Nchan=signal.Nchan)
-        # Now make the profiles with Nph bins
-        phs = np.linspace(0.0, 1.0, Nph)
-        # full_profs is a data array of the profiles
-        full_profs = self.Profiles.calc_profiles(phs, Nchan=signal.Nchan)
-        # Now multiply the profiles by the scaling required by the spectral index
-        full_profs *= C
-        # Now we reassign the pulsar profile object
-        self._Profiles = DataPortrait(full_profs)
+    #     signal [object] : signal class object which has been previously defined
+    #     """
+    #     # Calculate scaling factor
+    #     C = (signal.dat_freq / self.ref_freq)**self.specidx
+    #     C = np.reshape(C.value, (signal.Nchan,1))
+    #     # Now scale the profiles with these corrections
+    #     Nph = int((signal.samprate * self.period).decompose())
+    #     self.Profiles.init_profiles(Nph, Nchan=signal.Nchan)
+    #     # Now make the profiles with Nph bins
+    #     phs = np.linspace(0.0, 1.0, Nph)
+    #     # full_profs is a data array of the profiles
+    #     full_profs = self.Profiles.calc_profiles(phs, Nchan=signal.Nchan)
+    #     # Now multiply the profiles by the scaling required by the spectral index
+    #     full_profs *= C
+    #     # Now we reassign the pulsar profile object
+    #     self._Profiles = DataPortrait(full_profs)
 
     def make_pulses(self, signal, tobs):
         """generate pulses from Profiles, :class:`PulsePortrait` object
@@ -117,8 +117,8 @@ class Pulsar(object):
         if self.ref_freq == None:
             self._ref_freq = signal.fcent
         # Apply the spectral index, only for filterbank
-        if signal.sigtype == "FilterBankSignal":
-            self._add_spec_idx(signal)
+        # if signal.sigtype == "FilterBankSignal":
+        #     self._add_spec_idx(signal)
 
         # init base profile at correct sample rate
         Nph = int((signal.samprate * self.period).decompose())

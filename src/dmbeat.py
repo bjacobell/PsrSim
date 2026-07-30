@@ -11,17 +11,21 @@ plt.rcParams['font.family'] = 'serif'
 plt.rcParams['mathtext.fontset'] = 'dejavuserif'
 
 def downbin(a, phases, fbin=0.122, tbin=9.6636):
-    nf = (a.dat_freq[-1].value-a.dat_freq[0].value)/fbin+1
+    nf = (a.dat_freq[-1].value-a.dat_freq[0].value)/fbin
     nt = a.tobs.value/tbin
     nfpb = len(a.data)/nf
     ntpb = len(a.data[0])/nt
     print(nf, nfpb, nt, ntpb)
-    arr = a.data.reshape(int(round(nf)), int(round(nfpb)), int(round(nt)), int(round(ntpb)))
+    print(int(round(nf))*int(round(nfpb)))
+    print(a.data.shape)
+    adat = a.data[-int(nf)*int(round(nfpb)):, -int(nt)*int(round(ntpb)):]
+    print(adat.shape)
+    arr = adat.reshape(int(nf), int(round(nfpb)), int(nt), int(round(ntpb)))
     arr = np.average(arr, axis=3)
     arr = np.average(arr, axis=1)
     return arr
 
-def dmbeat(fstart, fstop, df, dt, tobs,
+def dmbeat(fstart, fstop, df, dt, tobs, Smean=0.100,
            P=1.2, D=0.05, DM=34, psr='J0630-2834'):
     '''
     Generates dynamic spectrum of flux values for a pulsar with 
@@ -34,6 +38,7 @@ def dmbeat(fstart, fstop, df, dt, tobs,
     df = frequency channel width [MHz]
     dt = time bin width [seconds]
     tobs = time length of observation [seconds]
+    Smean = mean flux of pulsar [Jy]
     P = pulsar period [seconds]
     D = pulsar duty cycle (can be calculated as pulse width divided by pulse period)
     DM = pulsar dispersion measure [pc cm^-3]
@@ -65,7 +70,7 @@ def dmbeat(fstart, fstop, df, dt, tobs,
     # Note that 'width' of GaussProfile is in units of pulse phase, not seconds
     gauss_prof = GaussProfile(peak = 0.5, width = D, amp = 1.0)
     gauss_prof.init_profiles(2048, Nchan = 1)
-    Smean = 10.0 # mean flux of pulsar in Jy; not currently used since we do not pass the Pulsar object through a telescope
+    # Smean is not currently used for anything; the profile is normalized to 1
     pulsar_1 = Pulsar(P, Smean, profiles = gauss_prof, name = psr)
 
     print(len(signal_1.dat_freq))

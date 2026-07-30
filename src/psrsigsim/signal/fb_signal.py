@@ -103,7 +103,8 @@ class FilterBankSignal(BaseSignal):
         first = (self._fcent - self._bw/2).to('MHz').value
         last = (self._fcent + self._bw/2).to('MHz').value
         step = (self._bw / self._Nchan).to('MHz').value
-        self._dat_freq = np.arange(first, last, step) * u.MHz
+        #self._dat_freq = np.arange(first, last, step) * u.MHz
+        self._dat_freq = np.linspace(first, last, self._Nchan) * u.MHz # avoid Nchan!=len(dat_freq) problem
 
         self._dtype = dtype
         self._set_draw_norm()
